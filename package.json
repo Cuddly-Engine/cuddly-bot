@@ -1,7 +1,7 @@
 {
-  "name": "ticketbot",
-  "version": "1.0.0",
-  "description": "A demo Discord bot for creating support tickets",
+  "name": "cuddly_engine_bot",
+  "version": "0.0.1",
+  "description": "Discord Bot for managing various things on the boys discord server. ",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --require dotenv/config --exec babel-node index.js",
