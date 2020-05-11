@@ -1,18 +1,35 @@
 {
-  "name": "tombot",
-  "version": "1.0.0",
-  "description": "Tom's very own discord bot for doing stuff",
+  "name": "cuddly_engine_bot",
+  "version": "0.0.1",
+  "description": "Discord Bot for managing various things on the boys discord server. ",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon --require dotenv/config --exec babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "discord",
-    "bot"
-  ],
-  "author": "Tom Franklin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/P16190097/TicketBot.git"
+  },
+  "author": "Mayoe",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/P16190097/TicketBot/issues"
+  },
+  "homepage": "https://github.com/P16190097/TicketBot#readme",
   "dependencies": {
-    "discord.js": "^11.5.1"
+    "axios": "^0.19.2",
+    "discord.js": "^12.2.0",
+    "discord.js-commando": "github:discordjs/Commando",
+    "dotenv": "^8.2.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.3"
   }
 }

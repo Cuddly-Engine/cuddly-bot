@@ -1,32 +1,38 @@
-const botconfig = require("./botconfig.json");
-const Discord = require("discord.js");
+import { CommandoClient } from 'discord.js-commando';
+import path from 'path';
 
-const bot = new Discord.Client({disableEveryone: true});
-
-bot.on("ready", async () => {
-  console.log(`${bot.user.username} is online!`);
+const client = new CommandoClient({
+	commandPrefix: '~',
+	owner: [
+    '100317151008657408',
+    '87683763546378240',
+  ],
+	//invite: 'https://discord.gg/bRCvFy9',
 });
 
-bot.on("message", async message => {
-  if(message.author.bot) return;
-  if(message.channel.type === "dm") return;
+client.registry
+	.registerDefaultTypes()
+	.registerGroups([
+    ['base', 'Base discord commands unrelated to any specific area.'],
+    ['gw2', 'Guild Wars 2 commands.'],
+	])
+	.registerDefaultGroups()
+	.registerDefaultCommands()
+	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-  let prefix = botconfig.prefix;
-  let messageArray = message.content.split(" ");
-  let cmd = messageArray[0];
-  let args = messageArray.slice(1);
 
-if(message.content.includes('bee')) {
-  return message.channel.send('!play https://www.youtube.com/watch?v=MADvxFXWvwE');
-}
-
-  if (cmd === `${prefix}hello`) {
-      return message.channel.send("hello!");
-  }
-
+client.on('ready', async () => {
+  console.log(`${client.user.username} is online!`);
+  client.user.setActivity('with itself');
 });
 
+client.on('error', console.error);
 
+// client.on('message', async message => {
+//   if(message.author.bot) return;
+//   if(message.channel.type === 'dm') return;
 
+// });
 
-bot.login(botconfig.token)
+// TODO: get token from discord client to add here
+client.login(process.env.CLIENT_TOKEN);
