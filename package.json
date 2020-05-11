@@ -1,7 +1,7 @@
 {
-  "name": "tombot",
+  "name": "cuddly_engine_bot",
   "version": "1.0.0",
-  "description": "Tom's very own discord bot for doing stuff",
+  "description": "Cuddly Engine bot for doing multiple tasks on the boys discord server. ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
     "discord",
     "bot"
   ],
-  "author": "Tom Franklin",
+  "author": "Tom Franklin, Joshua Mayo",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.5.1"
