@@ -13,7 +13,8 @@ const client = new CommandoClient({
 client.registry
 	.registerDefaultTypes()
 	.registerGroups([
-		['first', 'Your First Command Group'],
+    ['base', 'Base discord commands unrelated to any specific area.'],
+    ['gw2', 'Guild Wars 2 commands.'],
 	])
 	.registerDefaultGroups()
 	.registerDefaultCommands()

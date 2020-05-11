@@ -5,7 +5,7 @@ module.exports = class BeeCommand extends Command {
 		super(client, {
 			name: 'bee',
 			aliases: ['bee'],
-			group: 'first',
+			group: 'base',
 			memberName: 'bee',
 			description: 'Replies with a ram ranch',
 			throttling: {
