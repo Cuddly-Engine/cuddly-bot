@@ -1,8 +1,8 @@
 import { Command } from 'discord.js-commando';
-import { gw2 } from '../../services/api.service';
+import { getBreeds } from '../../services/api.service';
 
 
-module.exports = class BeeCommand extends Command {
+module.exports = class DogCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'dogs',
@@ -15,14 +15,10 @@ module.exports = class BeeCommand extends Command {
 				duration: 10,
 			},
 		});
-    }
-    
-    run(message) {
-		
-		let e = new gw2();
+	}
 
-		e.getBreeds().then((result) => {
-			return message.say(result);
-		});
+	async run(message) {
+		const resp = await getBreeds();
+		return message.say(resp);
 	}
 };

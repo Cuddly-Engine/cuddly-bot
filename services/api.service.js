@@ -1,22 +1,13 @@
 // @ts-check
-
 import axios from 'axios';
 
-export class gw2 {
-    
+const url = 'https://dog.ceo/api/';
 
-    constructor() {
-        this.url = 'https://dog.ceo/api/';
+export const getBreeds = async () => {
+    try {
+        const response = await axios.get(`${url}breeds/image/random`);
+        return response.data.message;
+    } catch (error) {
+        return error;
     }
-
-    async getBreeds() {
-            try {
-                let response = await axios.get(this.url + 'breeds/image/random');
-
-                return response.data.message;
-
-            } catch (error) {           
-               return error;
-            }
-    }
-}
+};
