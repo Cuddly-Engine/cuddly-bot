@@ -23,7 +23,7 @@ client.registry
 
 client.on('ready', async () => {
   console.log(`${client.user.username} is online!`);
-  client.user.setActivity('with itself');
+  client.user.setActivity('with a DOOB');
 });
 
 client.on('error', console.error);
