@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/P16190097/TicketBot#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "discord.js": "^12.2.0",
     "discord.js-commando": "github:discordjs/Commando",
     "dotenv": "^8.2.0",
