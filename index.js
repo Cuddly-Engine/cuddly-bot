@@ -1,30 +1,37 @@
-import Discord from 'discord.js';
-import config from './botconfig.json';
+import { CommandoClient } from 'discord.js-commando';
+import path from 'path';
 
-const client = new Discord.Client({disableEveryone: true});
+const client = new CommandoClient({
+	commandPrefix: '~',
+	owner: [
+    '100317151008657408',
+    '87683763546378240',
+  ],
+	//invite: 'https://discord.gg/bRCvFy9',
+});
 
-// TODO: get token from discord client to add here
-client.login(process.env.CLIENT_TOKEN);
+client.registry
+	.registerDefaultTypes()
+	.registerGroups([
+		['first', 'Your First Command Group'],
+	])
+	.registerDefaultGroups()
+	.registerDefaultCommands()
+	.registerCommandsIn(path.join(__dirname, 'commands'));
+
 
 client.on('ready', async () => {
   console.log(`${client.user.username} is online!`);
+  client.user.setActivity('with itself');
 });
 
-client.on('message', async message => {
-  if(message.author.bot) return;
-  if(message.channel.type === 'dm') return;
+client.on('error', console.error);
 
-  const prefix = config.prefix;
-  const messageArray = message.content.split(' ');
-  const cmd = messageArray[0];
-  //const args = messageArray.slice(1);
+// client.on('message', async message => {
+//   if(message.author.bot) return;
+//   if(message.channel.type === 'dm') return;
 
-  if(message.content.includes('bee')) {
-    return message.channel.send('!play https://www.youtube.com/watch?v=MADvxFXWvwE');
-  }
+// });
 
-  if (cmd === `${prefix}hello`) {
-      return message.channel.send('hello!');
-  }
-
-});
+// TODO: get token from discord client to add here
+client.login(process.env.CLIENT_TOKEN);
