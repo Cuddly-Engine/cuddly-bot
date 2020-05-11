@@ -1,13 +1,15 @@
 import { Command } from 'discord.js-commando';
+import { gw2 } from '../../services/api.service';
+
 
 module.exports = class BeeCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'bee',
-			aliases: ['bee'],
+			name: 'dogs',
+			aliases: ['dogs'],
 			group: 'base',
-			memberName: 'bee',
-			description: 'Replies with a ram ranch',
+			memberName: 'dogs',
+			description: 'Replies with a random image of a dog',
 			throttling: {
 				usages: 2,
 				duration: 10,
@@ -16,6 +18,11 @@ module.exports = class BeeCommand extends Command {
     }
     
     run(message) {
-		return message.say('!play https://www.youtube.com/watch?v=MADvxFXWvwE');
+		
+		let e = new gw2();
+
+		e.getBreeds().then((result) => {
+			return message.say(result);
+		});
 	}
 };
