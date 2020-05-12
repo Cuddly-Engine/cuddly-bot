@@ -1,7 +1,6 @@
 import { Command } from 'discord.js-commando';
 import { getWorldBosses } from '../../services/gwapi.service';
 
-
 module.exports = class WorldBossesCommand extends Command {
 	constructor(client) {
 		super(client, {
@@ -19,6 +18,7 @@ module.exports = class WorldBossesCommand extends Command {
 
 	async run(message) {
 		const resp = await getWorldBosses();
-		return message.say(resp);
+
+		return message.say(resp.data);
 	}
 };

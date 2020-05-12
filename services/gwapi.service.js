@@ -1,12 +1,14 @@
 // @ts-check
 import axios from 'axios';
-
-const url = 'https://dog.ceo/api/';
+const baseUrl = 'https://api.guildwars2.com'
 
 export const getWorldBosses = async () => {
     try {
-        const response = await axios.get(`${url}breeds/image/random`);
-        return response.data.message;
+        const response = await axios.get(`https://api.guildwars2.com/v2/worldbosses`);
+        console.log(response);
+   //     console.log(response);
+        
+        return response;
     } catch (error) {
         return error;
     }
