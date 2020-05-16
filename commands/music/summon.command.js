@@ -25,7 +25,7 @@ module.exports = class SummonCommand extends Command {
 
         const serverQueue = queue.get(message.guild.id);
         if (!serverQueue.songs) {
-            return message.say('Not currently playing music. Use ~play to play some tunes!');
+            return message.say('Not currently playing music. Use ~play {URL} to play some tunes!');
         }
 
         const permissions = voiceChannel.permissionsFor(message.client.user);
