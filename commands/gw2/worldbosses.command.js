@@ -19,6 +19,6 @@ module.exports = class WorldBossesCommand extends Command {
 	async run(message) {
 		const resp = await getWorldBosses();
 
-		return message.say(resp.data);
+		return message.say(resp);
 	}
 };
