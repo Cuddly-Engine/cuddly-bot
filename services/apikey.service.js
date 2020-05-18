@@ -22,8 +22,6 @@ export const addApiKey = async (name, key) => {
                 if(file.keys[name])
                     response = 'key already exists under that name.';
 
-
-                    console.log(response)
                 // ? Needs to be done this way, you can mess with it if you want, but this is the way
                 // writes new entry into keys array of the apikeys json object
                 var tmpObj = {};
@@ -39,8 +37,6 @@ export const addApiKey = async (name, key) => {
                 }});
             }       
         });
-
-         console.log(response)
          return response;
 
     } catch (error) {
