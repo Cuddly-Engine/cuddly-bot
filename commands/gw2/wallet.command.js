@@ -17,7 +17,9 @@ module.exports = class WorldBossesCommand extends Command {
 	}
 
 	async run(message) {
+		console.log("1")
 		const bank = await getBankAmount();
+		console.log("2")
 		let wallet = [];
 
 		await getCurrencyType().then(currencies => { // currency types from gw2 api
