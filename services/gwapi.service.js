@@ -28,6 +28,9 @@ export const getWorldBosses = async () => {
 
 export const getBankAmount = async (key) => {
     try {
+
+        console.log(key)
+
         const response = await axios.get(baseUrl + `/v2/account/wallet`, { headers: { Authorization: key } });
         return response.data;
     } catch (error) {

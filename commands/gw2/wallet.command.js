@@ -1,14 +1,15 @@
 import { Command } from 'discord.js-commando';
 import { getBankAmount, getCurrencyType } from '../../services/gwapi.service';
+import { getApiKey } from '../../services/apikey.service';
 // @ts-check
 module.exports = class WorldBossesCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'gw.wallet',
+			name: 'wallet',
 			aliases: ['wallet'],
 			group: 'base',
 			memberName: 'wallet',
-			description: 'Replies with a random image of a dog',
+			description: 'Gets guild wars 2 wallet information of user.',
 			throttling: {
 				usages: 2,
 				duration: 10,
@@ -17,10 +18,21 @@ module.exports = class WorldBossesCommand extends Command {
 	}
 
 	async run(message) {
-		console.log("1")
-		const bank = await getBankAmount();
-		console.log("2")
+
+		let result = message.argString.trim().split(" ");
+
+		let apikey = await getApiKey(result[0]);
+
+		if(apikey.error)
+			return message(apikey.text);
+
+		const bank = await getBankAmount(apikey.text);
+
+
+
 		let wallet = [];
+
+
 
 		await getCurrencyType().then(currencies => { // currency types from gw2 api
 			currencies.forEach(currency => { // for each currency in currency types
@@ -28,9 +40,11 @@ module.exports = class WorldBossesCommand extends Command {
 					if(usersCurrency.id === currency.id) {
 						// If 'Coin' type, put decimal place after gold amount. then place each currency type into a string "name: value". Coin type is named 'Gold' instead. 
 						if(currency.name === 'Coin') {
-							usersCurrency.value = usersCurrency.value / 10000;
+							let number = usersCurrency.value.toString().split("").reverse(); 
 
-							wallet.push("Gold: " + ": " + usersCurrency.value);
+							wallet.push("Copper: " + number[1] + number[0]);
+							wallet.push("Silver: " + number[3] + number[2]);
+							wallet.push("Gold: " + number.slice(4).reverse().join(''));
 						} else {
 							wallet.push(currency.name + ": " + usersCurrency.value);
 						}
