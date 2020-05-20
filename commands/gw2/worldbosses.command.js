@@ -8,7 +8,7 @@ module.exports = class WorldBossesCommand extends Command {
 			aliases: ['dog'],
 			group: 'base',
 			memberName: 'dog',
-			description: 'Replies with a random image of a dog',
+			description: 'Displays list of GW2 World Bosses',
 			throttling: {
 				usages: 2,
 				duration: 10,

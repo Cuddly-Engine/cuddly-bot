@@ -24,7 +24,7 @@
     "discord.js-commando": "github:discordjs/Commando",
     "dotenv": "^8.2.0",
     "file-system": "^2.2.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "ytdl-core": "^2.1.2"
