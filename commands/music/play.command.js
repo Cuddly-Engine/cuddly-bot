@@ -11,8 +11,8 @@ module.exports = class PlayCommand extends Command {
             memberName: 'play',
             description: 'Plays a song from Youtube.',
             throttling: {
-                usages: 2,
-                duration: 10,
+                usages: 1,
+                duration: 100,
             },
             guildOnly: true,
         });
@@ -35,7 +35,14 @@ module.exports = class PlayCommand extends Command {
             return message.say('Please enter a song to play!');
         }
 
-        const songInfo = await ytdl.getInfo(args[1]);
+        let songInfo;
+
+        try {
+            songInfo = await ytdl.getInfo(args[1]);
+        } catch (error) {
+            return message.say('Could not find song!');
+        }
+
         const song = {
             title: songInfo.title,
             url: songInfo.video_url,
@@ -76,7 +83,7 @@ module.exports = class PlayCommand extends Command {
         return message.say(song.title);
     }
 
-    play(guild, song) {
+    async play(guild, song) {
         const serverQueue = queue.get(guild.id);
         if (!song) {
             serverQueue.voiceChannel.leave();
@@ -84,7 +91,7 @@ module.exports = class PlayCommand extends Command {
             return;
         }
 
-        const dispatcher = serverQueue.connection
+        const dispatcher = await serverQueue.connection
             .play(ytdl(song.url))
             .on('finish', () => {
                 serverQueue.songs.shift();
