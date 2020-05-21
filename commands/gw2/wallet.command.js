@@ -28,11 +28,7 @@ module.exports = class WalletCommand extends Command {
 
 		const bank = await getBankAmount(apikey.text);
 
-
-
 		let wallet = [];
-
-
 
 		await getCurrencyType().then(currencies => { // currency types from gw2 api
 			currencies.forEach(currency => { // for each currency in currency types

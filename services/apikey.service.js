@@ -30,7 +30,6 @@ export const addApiKey = async (name, key) => {
         return 'success';
 
     } catch (error) {
-        console.log(error);
         return 'Something went wrong';
     }
 };
@@ -57,21 +56,55 @@ export const getApiKey = async (name) => {
     }
 };
 
-export const removeApiKey = async (name) => {
+export const removeApiKeyByName = async (name) => {
     try {
         name = name.toUpperCase(); // entries are always uppercase 
+ 
         let response = { error: false, text: '' };
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = await fs.readFile('./model/gwApiKeys.json', 'utf8');
-        const file = JSON.parse(data);
 
+        const data =  fs.readFileSync('./model/gwApiKeys.json', 'utf8');
+        const file = JSON.parse(data);
         if (file.keys[name]) {
             delete file.keys[name];
+
+            const json = JSON.stringify(file);
+
+            // Rewrite json with updated keys.
+            await fs.writeFileSync('./model/gwApiKeys.json', json, (err) => {
+                if (err) {
+                    response.error = true;
+                     response.text = 'unable to save to key storage. something is wrong pls contact my master.';
+                } 
+            });
         } else {
             response.error = true;
             response.text = 'there is no apikey associated with that name.';
         }
 
+        if(!response.error)
+            response.text = 'success';
+        
+            
+        return response;
+
+    } catch (error) {
+        return error;
+    }
+};
+
+export const removeApiKeyByKey = async (key) => {
+    try {
+        let response = { error: false, text: '' };
+        // Gets fresh copy of apikeys document so it can be updated and replaced.
+        const data = await fs.readFile('./model/gwApiKeys.json', 'utf8');
+        const file = JSON.parse(data);
+        const keys = Object.keys(file);
+
+        for(let i = 0; i< keys.length; i++) {
+            console.log(keys[i]);
+        }
+        
         return response;
 
     } catch (error) {

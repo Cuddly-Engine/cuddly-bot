@@ -1,5 +1,6 @@
 import { Command } from 'discord.js-commando';
-import { removeApiKey } from '../../services/apikey.service';
+import { removeApiKeyByName, removeApiKeyByKey } from '../../services/apikey.service';
+import { checkApiKeyExists } from '../../services/gwapi.service';
 // @ts-check
 module.exports = class RemoveKeyCommand extends Command {
 	constructor(client) {
@@ -17,20 +18,33 @@ module.exports = class RemoveKeyCommand extends Command {
 	}
 
 	async run(message) {
-		var result = message.argString.trim().split(" ");
+		const result = message.argString.trim().split(' ');
 
 		if (result.length > 1)
-			return message.say("Error, recieved more than just the api key you dummy!");
+			return message.say('Error, recieved more than just the api key you dummy!');
 
-		if (result.length === 0)
-			return message.say("Error, recieved less than 1 arguements. Give me the APIKEY. Gosh");
+		if (result[0] === '')
+			return message.say('Error, recieved less than 1 arguements. Give me the APIKEY or NAME. Gosh');
 
-		removeApiKey(result[0]).then(response => {
-			if (!response)
-				return message.say("Something went wrong. You broke me, congratulations, now put a correct name and apikey.");
+		const isKey = await checkApiKeyExists(result[0]);
+
+		if(isKey) {
+			removeApiKeyByKey(result[0]).then(response => {
+				if (!response)
+				return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
 			else
 				// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
-				return message.say(response);
-		});
+				return message.say(response);		
+			});
+		} else {
+			removeApiKeyByName(result[0]).then(response => {
+				if (!response)
+					return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
+				else
+				console.log(response)
+					// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
+					return message.say(response.text);
+			});
+		}
 	}
 };

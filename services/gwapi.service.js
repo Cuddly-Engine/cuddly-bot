@@ -7,7 +7,7 @@ export const checkApiKeyExists = async (key) => {
     try {
 
         // Dummy request. doesn't matter what it is as long as it uses api key. 
-        const response = await axios.get(`${baseUrl}/v2/account/wallet`, { headers: { Authorization: key } });
+        await axios.get(`${baseUrl}/v2/account/wallet`, { headers: { Authorization: key } });
 
         return true;
     } catch (error) {
@@ -28,8 +28,6 @@ export const getWorldBosses = async () => {
 
 export const getBankAmount = async (key) => {
     try {
-        console.log(key);
-
         const response = await axios.get(`${baseUrl}/v2/account/wallet`, { headers: { Authorization: key } });
         return response.data;
     } catch (error) {
