@@ -26,7 +26,8 @@ module.exports = class RemoveKeyCommand extends Command {
 		if (result[0] === '')
 			return message.say('Error, recieved less than 1 arguements. Give me the APIKEY or NAME. Gosh');
 
-		const isKey = await checkApiKeyExists(result[0]);
+
+		const isKey = await checkApiKeyExists('Bearer ' + result[0]);
 
 		if(isKey) {
 			removeApiKeyByKey(result[0]).then(response => {
@@ -34,14 +35,14 @@ module.exports = class RemoveKeyCommand extends Command {
 				return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
 			else
 				// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
-				return message.say(response);		
+				return message.say(response.text);		
 			});
 		} else {
 			removeApiKeyByName(result[0]).then(response => {
 				if (!response)
 					return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
 				else
-				console.log(response)
+
 					// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
 					return message.say(response.text);
 			});

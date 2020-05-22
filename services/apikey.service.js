@@ -16,7 +16,7 @@ export const addApiKey = async (name, key) => {
 
         // ? Needs to be done this way, you can mess with it if you want, but this is the way
         // writes new entry into keys array of the apikeys json object
-        file.keys[name.toUpperCase()] = 'Bearer ' + key; // Storing bearer with key so i never have to write it 
+        file.keys[name.toUpperCase()] = key; // Storing bearer with key so i never have to write it 
 
         const json = JSON.stringify(file);
 
@@ -39,7 +39,7 @@ export const getApiKey = async (name) => {
         name = name.toUpperCase(); // entries are always uppercase 
         let response = { error: false, text: '' };
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = await fs.readFile('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
 
         if (!file.keys[name]) {
@@ -63,27 +63,29 @@ export const removeApiKeyByName = async (name) => {
         let response = { error: false, text: '' };
         // Gets fresh copy of apikeys document so it can be updated and replaced.
 
-        const data =  fs.readFileSync('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
         if (file.keys[name]) {
             delete file.keys[name];
 
-            const json = JSON.stringify(file);
+        const json = JSON.stringify(file);
 
-            // Rewrite json with updated keys.
-            await fs.writeFileSync('./model/gwApiKeys.json', json, (err) => {
-                if (err) {
-                    response.error = true;
-                     response.text = 'unable to save to key storage. something is wrong pls contact my master.';
-                } 
-            });
+        // Rewrite json with updated keys.
+        await fs.writeFileSync('./model/gwApiKeys.json', json, (err) => {
+            if (err) {
+                response.error = true;
+                response.text = 'unable to save to key storage. something is wrong pls contact my master.';
+                return response;
+            } 
+        });
         } else {
             response.error = true;
             response.text = 'there is no apikey associated with that name.';
+            return response;
         }
 
         if(!response.error)
-            response.text = 'success';
+            response.text = 'apikey successfully deleted.';
         
             
         return response;
@@ -97,14 +99,40 @@ export const removeApiKeyByKey = async (key) => {
     try {
         let response = { error: false, text: '' };
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = await fs.readFile('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
-        const keys = Object.keys(file);
-
+        // Converting into array object so i can get the names of each key
+        const keys = Object.keys(file.keys);
+        // Keeping track of keys deleted to tell the user.
+        const keysDeleted = [];
+        
         for(let i = 0; i< keys.length; i++) {
-            console.log(keys[i]);
+            // using names of each key as indexes, if equal to key given, DELETE
+            if(file.keys[keys[i]] === key) {
+                keysDeleted.push(keys[i]);
+                delete file.keys[keys[i]];
+            }
+        }
+
+        const json = JSON.stringify(file);
+
+        // Rewrite json with updated keys.
+        await fs.writeFileSync('./model/gwApiKeys.json', json, (err) => {
+            if (err) {
+                response.error = true;
+                response.text = 'unable to save to key storage. something is wrong pls contact my master.';
+                return response;
+            } 
+        });
+
+        if(keysDeleted.length === 0) {
+            response.error = true;
+            response.text = 'No entries exist with the given key.';
+            return response;
         }
         
+        response.text = 'Keys deleted: ' + keysDeleted.toString();
+
         return response;
 
     } catch (error) {
