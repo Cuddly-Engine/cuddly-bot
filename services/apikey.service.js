@@ -3,7 +3,7 @@ import fs from 'fs';
 
 export const addApiKey = async (name, key) => {
     try {
-        if (!await checkApiKeyExists('Bearer ' + key)) {
+        if (!await checkApiKeyExists(key)) {
             return 'invalid key. If you feel the key is correct, check that the correct privilages have been ticked when creating it.';
         }
 

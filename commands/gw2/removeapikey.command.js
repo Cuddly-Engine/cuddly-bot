@@ -27,7 +27,7 @@ module.exports = class RemoveKeyCommand extends Command {
 			return message.say('Error, recieved less than 1 arguements. Give me the APIKEY or NAME. Gosh');
 
 
-		const isKey = await checkApiKeyExists('Bearer ' + result[0]);
+		const isKey = await checkApiKeyExists(result[0]);
 
 		if(isKey) {
 			removeApiKeyByKey(result[0]).then(response => {
