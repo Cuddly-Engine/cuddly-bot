@@ -46,3 +46,47 @@ export const getCurrencyType = async () => {
         return error;
     }
 };
+
+export const getDailys = async () => {
+    try {
+
+        const response = await axios.get(`${baseUrl}/v2/achievements/daily`);
+
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const getQuaggans = async () => {
+    try {
+
+        const response = await axios.get(`${baseUrl}/v2/quaggans`);
+
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const getQuaggan = async (quag) => {
+    try {
+
+        const response = await axios.get(`${baseUrl}/v2/quaggans/${quag}`);
+
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const getFractals = async (fracIds) => {
+    try {
+
+        const response = await axios.get(`${baseUrl}/v2/achievements?ids=${fracIds}`);
+
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
