@@ -4,10 +4,10 @@ import { getWorldBosses } from '../../services/gwapi.service';
 module.exports = class WorldBossesCommand extends Command {
 	constructor(client) {
 		super(client, {
-			name: 'gw.worldbosses',
-			aliases: ['dog'],
-			group: 'base',
-			memberName: 'dog',
+			name: 'gw worldbosses',
+			aliases: ['gw2'],
+			group: 'gw2',
+			memberName: 'gw2',
 			description: 'Displays list of GW2 World Bosses',
 			throttling: {
 				usages: 2,

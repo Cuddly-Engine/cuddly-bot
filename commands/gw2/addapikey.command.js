@@ -6,7 +6,7 @@ module.exports = class AddKeyCommand extends Command {
 		super(client, {
 			name: 'addkey',
 			aliases: ['addkey'],
-			group: 'base',
+			group: 'gw2',
 			memberName: 'addkey',
 			description: 'Adds key to list of known players',
 			throttling: {

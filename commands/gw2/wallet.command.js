@@ -7,7 +7,7 @@ module.exports = class WalletCommand extends Command {
 		super(client, {
 			name: 'wallet',
 			aliases: ['wallet'],
-			group: 'base',
+			group: 'gw2',
 			memberName: 'wallet',
 			description: 'Gets guild wars 2 wallet information of user.',
 			throttling: {

@@ -7,7 +7,7 @@ module.exports = class RemoveKeyCommand extends Command {
 		super(client, {
 			name: 'removekey',
 			aliases: ['removekey'],
-			group: 'base',
+			group: 'gw2',
 			memberName: 'removekey',
 			description: 'Removes API key from list of known players',
 			throttling: {
