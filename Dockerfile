@@ -1,5 +1,7 @@
 FROM node:12
 
+RUN apt-get update || : && apt-get install python -y
+
 # Create app directory
 WORKDIR /usr/src/app
 
