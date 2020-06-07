@@ -27,11 +27,7 @@ module.exports = class AddKeyCommand extends Command {
 			return message.say('Error, recieved less than 2 arguements. Give me the NAME and APIKEY. Gosh');
 
 		const response = await addApiKey(result[0], result[1]);
-
-		if (!response)
-			return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
-		else
-			// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
-			return message.say(response);
+		// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
+		return message.say(response);
 	}
 };
