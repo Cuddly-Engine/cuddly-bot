@@ -7,7 +7,7 @@ module.exports = class RemoveKeyCommand extends Command {
 		super(client, {
 			name: 'removekey',
 			aliases: ['removekey'],
-			group: 'base',
+			group: 'gw2',
 			memberName: 'removekey',
 			description: 'Removes API key from list of known players',
 			throttling: {
@@ -26,26 +26,16 @@ module.exports = class RemoveKeyCommand extends Command {
 		if (result[0] === '')
 			return message.say('Error, recieved less than 1 arguements. Give me the APIKEY or NAME. Gosh');
 
-
 		const isKey = await checkApiKeyExists(result[0]);
 
-		if(isKey) {
-			removeApiKeyByKey(result[0]).then(response => {
-				if (!response)
-				return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
-			else
-				// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
-				return message.say(response.text);		
-			});
-		} else {
-			removeApiKeyByName(result[0]).then(response => {
-				if (!response)
-					return message.say('Something went wrong. You broke me, congratulations, now put a correct name and apikey.');
-				else
-
-					// This may not be success. response could be error handling from inside the apikey service ^ (addApiKey function)
-					return message.say(response.text);
-			});
+		if (isKey === 'key') {
+			const response = await removeApiKeyByKey(result[0]);
+			return message.say(response);
+		} else if (isKey === 'name') {
+			const response = await removeApiKeyByName(result[0]);
+			return message.say(response);
 		}
+
+		return message.say('Name or API key does not exist to delete');
 	}
 };
