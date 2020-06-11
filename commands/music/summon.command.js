@@ -24,7 +24,7 @@ module.exports = class SummonCommand extends Command {
         }
 
         const serverQueue = queue.get(message.guild.id);
-        if (!serverQueue.songs) {
+        if (!serverQueue || !serverQueue.songs) {
             return message.say('Not currently playing music. Use ~play {URL} to play some tunes!');
         }
 
@@ -34,6 +34,6 @@ module.exports = class SummonCommand extends Command {
         }
 
         await voiceChannel.join();
-        return message.say(`Joining ${message.channel}`);
+        return message.say(`Joining ${voiceChannel.name}`);
     }
 };
