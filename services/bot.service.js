@@ -1,4 +1,6 @@
 
+
+// Sends Message to default channel. General, announcements or first text channel in list. 
 export const sendMessage = async (client, message) => {
     try {   
 
