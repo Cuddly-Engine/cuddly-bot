@@ -3,8 +3,9 @@ export const sendMessage = async (client, message) => {
     try {   
 
         // TODO allow users to set the channel for bot reminders / announcements. 
+        // TODO or cache this so we don't have to keep finding a channel...
 
-        // ? Tries to find channel containing keywords "welcome" or "general"
+        // ? Tries to find channel containing keywords "announcements" or "general"
        let defaultChannel = client.channels.cache.find(channel =>    
         (channel.name.toLowerCase().includes('general') || channel.name.toLowerCase().includes('announcements'))
         && channel.type === 'text'      

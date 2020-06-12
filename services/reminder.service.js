@@ -3,10 +3,10 @@ import { sendMessage } from '../services/bot.service';
 
 export const setReminder = async (client, dateText, reminder) => {
     try {
-
-        console.log(dateText);
-
-        const date = new Date("2020, 06, 12, 16, 48, 00, 00");
+        const date = new Date(dateText);
+        
+        if(date.getTime() !== date.getTime()) // NaN is never equal to itself (according to google)
+            return 'Invalid Date. Please give me a date in the following format: **MONTH DAY, YEAR TIME | MESSAGE**';
 
         schedule.scheduleJob(date, () => {
             sendMessage(client, reminder);
@@ -15,7 +15,6 @@ export const setReminder = async (client, dateText, reminder) => {
         return 'I have set a reminder for ' + date.toUTCString() + '.';
 
     } catch (error) {
-        console.log(error);
         return 'Something went wrong, pls contact my master.';
     }
 };
