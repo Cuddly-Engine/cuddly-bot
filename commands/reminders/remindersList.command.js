@@ -23,7 +23,10 @@ module.exports = class ReminderListCommand extends Command {
 		reminders.forEach(reminder => {
 				message.channel.send({embed: {
 				author: {
+					// TODO make the images locally stored.
 					name: 'ID: ' + reminder.name,
+					icon_url: 'https://i.imgur.com/uxZLrc7.png',
+					//icon_url: 'https://i.imgur.com/cSL3Ok9.png',
 					// If we add recurring reminders, we could put an icon here using icon_url: URL. To represent a recurring one
 				},
 				title: new Date(reminder.date).toUTCString(),
