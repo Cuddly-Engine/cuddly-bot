@@ -29,8 +29,8 @@ module.exports = class ReminderListCommand extends Command {
 					//icon_url: 'https://i.imgur.com/cSL3Ok9.png',
 					// If we add recurring reminders, we could put an icon here using icon_url: URL. To represent a recurring one
 				},
-				title: new Date(reminder.date).toUTCString(),
-				description:  reminder.message,
+				title: reminder.message,
+				description:  new Date(reminder.date).toUTCString(),
 				footer: {
 					icon_url: reminder.userimage,
 					text: reminder.username,

@@ -1,5 +1,5 @@
 import schedule  from 'node-schedule';      
-import { sendMessage } from '../services/bot.service';    
+import { sendReminder } from '../services/bot.service';    
 import Reminder from '../model/reminder';
 import fs from 'fs';
 
@@ -16,7 +16,7 @@ export const setReminder = async (client, dateText, reminder, author) => {
         const reminderId = await generateIdReminder();
         
         const job = schedule.scheduleJob(reminderId, date, () => {
-              sendMessage(client, reminder);
+            sendReminder(client, author.username, author.displayAvatarURL(), reminder.name, reminder.message, reminder.date);
         });
         const reminderSaved = await saveReminder(author, job, reminder, date);
 
@@ -88,7 +88,7 @@ export const generateIdReminder = async () => {
 
 export const saveReminder = async (client, job, message, date) => {
     try {
-
+                                                
         let reminder = await new Reminder(client.username, client.displayAvatarURL(), message, date);
         reminder = {...reminder, ...job};
 
@@ -106,7 +106,7 @@ export const saveReminder = async (client, job, message, date) => {
         console.log(error);
         return false;
     }
-}
+};
 
 export const setRemindersOnStart = async (client) => {
     try {
@@ -115,9 +115,11 @@ export const setRemindersOnStart = async (client) => {
 
          file.forEach(reminder => {
             schedule.scheduleJob(reminder.name, reminder.date, () => {
-                sendMessage(client, reminder.message);
+                sendReminder(client, reminder.username, reminder.userimage, reminder.name, reminder.message, reminder.date);
             });
          });
+         // Log in console that the reminders have been loaded on startup.
+         console.info('\x1b[36m%s\x1b[0m', '[Reminders] ' + file.length  + ' Reminders loaded succesfully!');
 
         return true;
     } catch (error) {
