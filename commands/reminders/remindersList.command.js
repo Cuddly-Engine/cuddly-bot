@@ -9,13 +9,33 @@ module.exports = class ReminderListCommand extends Command {
 			memberName: 'reminder-list',
 			description: 'Sets reminder which will then appear in Discord at specified time.',
 			throttling: {
-				usages: 2,
-				duration: 10,
+				usages: 1, // This could easily be used for spam, so reduced amount of usages and increased duration.
+				duration: 60,
 			},
 		});
 	}
 
 	async run(message) {
-		return message.say(await listReminders(this.client));
+
+		const reminders = await listReminders(this.client);
+		const embeds = [];
+
+
+		for(const reminder in reminders) {
+			try {
+
+				// TODO add Username, User Image, Reminder message. This can be done once the messages are actually being stored locally.  
+
+				message.channel.send({embed: {
+					author: {
+						name: new Date(reminders[reminder].nextInvocation()).toUTCString(),
+					  },
+					title: reminders[reminder].name,
+				}});
+			} catch  {
+				console.log(error);
+				message.channel.send("Something went wrong processing one of the reminders. Let my masters know this happened.");
+			}
+		}
 	}
 };

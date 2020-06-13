@@ -13,7 +13,7 @@ export const setReminder = async (client, dateText, reminder) => {
             sendMessage(client, reminder);
         });
 
-        return 'I have set a reminder with ID **' + reminderId + '** for ' + date.toUTCString() + '. ``` You will need the ID ' + reminderId + ' if you wish to delete or edit the reminder. ```';
+        return 'I have set a reminder with id **' + reminderId + '** for ' + date.toUTCString() + '. ``` You will need the id ' + reminderId + ' if you wish to delete or edit the reminder. ```';
 
     } catch (error) {
         return 'Something went wrong, pls contact my master.';
@@ -38,22 +38,10 @@ export const cancelReminder = async (id) => {
 
 export const listReminders = async () => {
     try {
-        // scheduledJobs is an object, so need to convert to array.
-        const list = schedule.scheduledJobs;
-
-        // TODO all of this is temporary until I get actual data storage sorted. :) 
-
-        let reminders = [];
-
-        for(let reminder in list) {
-            reminders.push(reminder);
-        }
-
-
-        // TODO this listing is temporary for testing. Plan on styling it properly to make it look nice in discord chat o_O oWo 
-        return list.toString();
-
+        
+        return Object.values(schedule.scheduledJobs).filter(job => job.name.includes('RE'));
     } catch (error) {
+        console.log(error);
         return 'Unable to retrieve scheduled Reminders.';
     }
 };
