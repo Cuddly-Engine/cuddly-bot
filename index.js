@@ -1,6 +1,8 @@
 import { CommandoClient } from 'discord.js-commando';
 import path from 'path';
 import { setRemindersOnStart } from './services/reminder.service';
+import queue from './services/queue.service';
+
 
 const client = new CommandoClient({
   commandPrefix: '~',
@@ -24,21 +26,23 @@ client.registry
 
 client.on('ready', async () => {
   console.log(`${client.user.username} is online!`);
+
   client.user.setActivity('celebrating pet fish birthday');
 
   let setReminders = await setRemindersOnStart(client);
 
   if(!setReminders) 
     console.error('Failed to set reminders on launch. Suggest Restart');
+  client.user.setActivity('with a DOOB | ~help');
+});
+
+client.on('voiceStateUpdate', async (oldState, newState) => {
+  if (!newState.channelID) {
+    queue.delete(oldState.guild.id);
+  }
 });
 
 client.on('error', console.error);
-
-// client.on('message', async message => {
-//   if(message.author.bot) return;
-//   if(message.channel.type === 'dm') return;
-
-// });
 
 // TODO: get token from discord client to add here
 client.login(process.env.CLIENT_TOKEN);

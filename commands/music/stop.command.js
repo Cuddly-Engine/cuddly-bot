@@ -24,7 +24,12 @@ module.exports = class StopCommand extends Command {
             return message.channel.send('You have to be in a voice channel to stop the music!');
         }
 
+        if (!serverQueue.connection.dispatcher) {
+            return message.channel.send('I\'m not currently playing any music.');
+        }
+
         serverQueue.songs = [];
         serverQueue.connection.dispatcher.end();
+        return message.say('Stopping music...');
     }
 };
