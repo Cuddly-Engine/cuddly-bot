@@ -20,24 +20,21 @@ module.exports = class ReminderListCommand extends Command {
 		const reminders = await listReminders(this.client);
 		const embeds = [];
 
-
-		for(const reminder in reminders) {
-			try {
-				console.log(reminders[reminder]);
-				// TODO add Username, User Image, Reminder message. This can be done once the messages are actually being stored locally.  
-
+		reminders.forEach(reminder => {
 				message.channel.send({embed: {
-					author: {
-						name: new Date(reminders[reminder].nextInvocation()).toUTCString(),
-					  },
-					title: reminders[reminder].name,
+				author: {
+					name: 'ID: ' + reminder.name,
+					// If we add recurring reminders, we could put an icon here using icon_url: URL. To represent a recurring one
+				},
+				title: new Date(reminder.date).toUTCString(),
+				description:  reminder.message,
+				footer: {
+					icon_url: reminder.userimage,
+					text: reminder.username,
+				},
 				}});
-			} catch (error) {
-				// Some reminders for one reason or another -might- be missing information, causing it to break.
+		});
 
-				console.log(error);
-				message.channel.send('Something went wrong processing one of the reminders. Let my masters know this happened.');
-			}
-		}
+
 	}
 };

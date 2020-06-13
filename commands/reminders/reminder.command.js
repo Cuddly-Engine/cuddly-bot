@@ -17,7 +17,6 @@ module.exports = class ReminderCommand extends Command {
 	}
 
 	async run(message) {
-	
 		const reminder = message.argString.trim();
 
 		const args = reminder.split('|');
@@ -25,6 +24,6 @@ module.exports = class ReminderCommand extends Command {
 		if(args.length < 2)
 			return message.say('Failed to split the date and message. use the **|** symbol. ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```');		
 
-		return message.say( await setReminder(this.client /* The discord client */, args[0].trim() /* Date */, args[1].trim() /* Reminder Message */));
+		return message.say( await setReminder(this.client /* The discord client */, args[0].trim() /* Date */, args[1].trim() /* Reminder Message */, message.author));
 	}
 };

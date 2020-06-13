@@ -3,19 +3,22 @@ import { sendMessage } from '../services/bot.service';
 import Reminder from '../model/reminder';
 import fs from 'fs';
 
-export const setReminder = async (client, dateText, reminder) => {
+export const setReminder = async (client, dateText, reminder, author) => {
     try {
         const date = new Date(dateText);
         
+        if(date < new Date())
+            return 'DateTime must be in the future!';
+
         if(date.getTime() !== date.getTime()) // NaN is never equal to itself (according to google)
             return 'Invalid Date. Example:  "June 12, 2020 16:57:00" ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```';
 
         const reminderId = await generateIdReminder();
+        
         const job = schedule.scheduleJob(reminderId, date, () => {
-            sendMessage(client, reminder);
+              sendMessage(client, reminder);
         });
-
-        const reminderSaved = await saveReminder(client, job, reminder, date);
+        const reminderSaved = await saveReminder(author, job, reminder, date);
 
         if(!reminderSaved) {
             schedule.cancelJob(reminderId);
@@ -47,8 +50,10 @@ export const cancelReminder = async (id) => {
 
 export const listReminders = async () => {
     try {
-        
-        return Object.values(schedule.scheduledJobs).filter(job => job.name.includes('RE'));
+        const data = await fs.readFileSync('./data/reminders.json');
+        const file = JSON.parse(data);
+
+        return file;
     } catch (error) {
         console.log(error);
         return 'Unable to retrieve scheduled Reminders.';
@@ -61,7 +66,7 @@ export const generateIdReminder = async () => {
     try {
         const list = schedule.scheduledJobs;
 
-        return 'RE' + (Object.keys(list).length + 1);
+        return 'RE' + (Object.keys(list).length);
     } catch (error) {
         return 'Unable to retrieve scheduled reminders.';
     }
@@ -70,7 +75,7 @@ export const generateIdReminder = async () => {
 export const saveReminder = async (client, job, message, date) => {
     try {
 
-        let reminder = await new Reminder(client.user.username, client.user.avatarURL, message, date);
+        let reminder = await new Reminder(client.username, client.displayAvatarURL(), message, date);
         reminder = {...reminder, ...job};
 
         const data = await fs.readFileSync('./data/reminders.json');
@@ -79,7 +84,7 @@ export const saveReminder = async (client, job, message, date) => {
         file.push(reminder);
         const json = JSON.stringify(file);
 
-        // Rewrite json with updated keys.
+        // Rewrite json with updated reminders.
         fs.writeFileSync('./data/reminders.json', json);
 
         return true;
@@ -91,14 +96,14 @@ export const saveReminder = async (client, job, message, date) => {
 
 export const setRemindersOnStart = async (client) => {
     try {
-        const data = await fs.readFileSync('./data/reminders.json');
+        const data = fs.readFileSync('./data/reminders.json');
         const file = JSON.parse(data);
 
-        file.forEach(reminder => {
+         file.forEach(reminder => {
             schedule.scheduleJob(reminder.name, reminder.date, () => {
                 sendMessage(client, reminder.message);
             });
-        });
+         });
 
         return true;
     } catch (error) {
