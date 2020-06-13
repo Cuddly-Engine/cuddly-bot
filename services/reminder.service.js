@@ -38,6 +38,20 @@ export const cancelReminder = async (id) => {
         
         if(!job)
             return 'Invalid ID, try again. ```~reminder-cancel ID```';
+        try {
+            const data = await fs.readFileSync('./data/reminders.json');
+            const file = JSON.parse(data);
+    
+            const newFile = file.filter(reminder =>  reminder.name !== id);
+    
+            const json = JSON.stringify(newFile);
+    
+            // Rewrite json with updated reminders.
+            fs.writeFileSync('./data/reminders.json', json);
+        } catch (e) {
+            console.log(e);
+            return 'Unable to rewrite reminders to file. Something went wrong!';
+        }
 
         job.cancel();
 
