@@ -8,7 +8,7 @@ export const addApiKey = async (name, key) => {
         }
 
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = await fs.readFileSync('./model/gwApiKeys.json');
+        const data = await fs.readFileSync('./data/gwApiKeys.json');
         const file = JSON.parse(data);
 
         if (file.keys.some(el => el.name === name.toUpperCase()))
@@ -37,7 +37,7 @@ export const getApiKey = async (name) => {
     try {
         name = name.toUpperCase(); // entries are always uppercase 
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./data/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
 
         const key = file.keys.find(key => key.name === name);
@@ -65,7 +65,7 @@ export const getApiKey = async (name) => {
 
 export const checkApiKeyExists = async (key) => {
     try {
-        const data = await fs.readFileSync('./model/gwApiKeys.json');
+        const data = await fs.readFileSync('./data/gwApiKeys.json');
         const file = JSON.parse(data);
 
         if (file.keys.some(el => el.key === key))
@@ -84,7 +84,7 @@ export const removeApiKeyByName = async (name) => {
         name = name.toUpperCase(); // entries are always uppercase 
 
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./data/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
 
         const json = JSON.stringify(file.keys.filter(key => key.name === name));
@@ -102,7 +102,7 @@ export const removeApiKeyByName = async (name) => {
 export const removeApiKeyByKey = async (apiKey) => {
     try {
         // Gets fresh copy of apikeys document so it can be updated and replaced.
-        const data = fs.readFileSync('./model/gwApiKeys.json', 'utf8');
+        const data = fs.readFileSync('./data/gwApiKeys.json', 'utf8');
         const file = JSON.parse(data);
         // Converting into array object so i can get the names of each key
         const json = JSON.stringify(file.keys.filter(key => key.key === apiKey));

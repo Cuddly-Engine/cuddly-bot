@@ -1,5 +1,5 @@
 import { Command } from 'discord.js-commando';
-import { getBreeds } from '../../services/api.service';
+import { getBreeds } from '../../services/dogapi.service';
 
 module.exports = class DogCommand extends Command {
 	constructor(client) {
