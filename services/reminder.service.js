@@ -1,5 +1,7 @@
 import schedule  from 'node-schedule';      
 import { sendMessage } from '../services/bot.service';    
+import Reminder from '../model/reminder';
+import fs from 'fs';
 
 export const setReminder = async (client, dateText, reminder) => {
     try {
@@ -9,9 +11,16 @@ export const setReminder = async (client, dateText, reminder) => {
             return 'Invalid Date. Example:  "June 12, 2020 16:57:00" ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```';
 
         const reminderId = await generateIdReminder();
-        schedule.scheduleJob(reminderId, date, () => {
+        const job = schedule.scheduleJob(reminderId, date, () => {
             sendMessage(client, reminder);
         });
+
+        const reminderSaved = await saveReminder(client, job, reminder, date);
+
+        if(!reminderSaved) {
+            schedule.cancelJob(reminderId);
+            return 'Reminder failed to save. Removed reminder from the schedule to prevent duplication. If this persists please contact my masters.';
+        }
 
         return 'I have set a reminder with id **' + reminderId + '** for ' + date.toUTCString() + '. ``` You will need the id ' + reminderId + ' if you wish to delete or edit the reminder. ```';
 
@@ -55,5 +64,45 @@ export const generateIdReminder = async () => {
         return 'RE' + (Object.keys(list).length + 1);
     } catch (error) {
         return 'Unable to retrieve scheduled reminders.';
+    }
+};
+
+export const saveReminder = async (client, job, message, date) => {
+    try {
+
+        let reminder = await new Reminder(client.user.username, client.user.avatarURL, message, date);
+        reminder = {...reminder, ...job};
+
+        const data = await fs.readFileSync('./data/reminders.json');
+        const file = JSON.parse(data);
+
+        file.push(reminder);
+        const json = JSON.stringify(file);
+
+        // Rewrite json with updated keys.
+        fs.writeFileSync('./data/reminders.json', json);
+
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export const setRemindersOnStart = async (client) => {
+    try {
+        const data = await fs.readFileSync('./data/reminders.json');
+        const file = JSON.parse(data);
+
+        file.forEach(reminder => {
+            schedule.scheduleJob(reminder.name, reminder.date, () => {
+                sendMessage(client, reminder.message);
+            });
+        });
+
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
     }
 };

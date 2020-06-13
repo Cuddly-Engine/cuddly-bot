@@ -23,7 +23,7 @@ module.exports = class ReminderListCommand extends Command {
 
 		for(const reminder in reminders) {
 			try {
-
+				console.log(reminders[reminder]);
 				// TODO add Username, User Image, Reminder message. This can be done once the messages are actually being stored locally.  
 
 				message.channel.send({embed: {
@@ -32,9 +32,11 @@ module.exports = class ReminderListCommand extends Command {
 					  },
 					title: reminders[reminder].name,
 				}});
-			} catch  {
+			} catch (error) {
+				// Some reminders for one reason or another -might- be missing information, causing it to break.
+
 				console.log(error);
-				message.channel.send("Something went wrong processing one of the reminders. Let my masters know this happened.");
+				message.channel.send('Something went wrong processing one of the reminders. Let my masters know this happened.');
 			}
 		}
 	}
