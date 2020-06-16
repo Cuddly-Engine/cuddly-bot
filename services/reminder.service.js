@@ -112,14 +112,35 @@ export const setRemindersOnStart = async (client) => {
     try {
         const data = fs.readFileSync('./data/reminders.json');
         const file = JSON.parse(data);
+        
+        let removedDates = 0; // Counting the amount of dates removed due to out of dateness.
+        let setDates = 0; // Record of how many reminders have been set up on startup.
 
-         file.forEach(reminder => {
-            schedule.scheduleJob(reminder.name, reminder.date, () => {
-                sendReminder(client, reminder.username, reminder.userimage, reminder.name, reminder.message, reminder.date);
-            });
+         file.forEach((reminder, index) => {
+
+            // Checking date is not older than today (whenever bot is booted up).
+            if(new Date(reminder.date) < new Date()) {
+                removedDates++;
+                file.splice(index, 1);
+            } else {
+                schedule.scheduleJob(reminder.name, reminder.date, () => {
+                    sendReminder(client, reminder.username, reminder.userimage, reminder.name, reminder.message, reminder.date);
+                });
+                setDates++;
+            }
          });
+         
+         const json = JSON.stringify(file);
+
+         // Rewrite json with updated reminders.
+         fs.writeFileSync('./data/reminders.json', json);
+
+         console.info('\x1b[33m', `warning: removed ${removedDates} reminders due to them being out of date.`);
+
+
          // Log in console that the reminders have been loaded on startup.
-         console.info('\x1b[36m%s\x1b[0m', '[Reminders] ' + file.length  + ' Reminders loaded succesfully!');
+         console.info('\x1b[36m%s\x1b[0m', ` ${setDates} reminders successfully loaded on launch!`);
+
 
         return true;
     } catch (error) {
