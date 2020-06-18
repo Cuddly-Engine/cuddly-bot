@@ -4,7 +4,7 @@ module.exports = class ReminderListCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'reminder-list',
-			aliases: ['reminderlist'],
+			aliases: ['reminderlist', 'listreminder','listreminders','list-reminders','reminder-list','reminders','rl','lr'],
 			group: 'base',
 			memberName: 'reminder-list',
 			description: 'Sets reminder which will then appear in Discord at specified time.',

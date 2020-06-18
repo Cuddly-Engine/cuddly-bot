@@ -5,6 +5,9 @@ import fs from 'fs';
 
 export const setReminder = async (client, dateText, reminder, author) => {
     try {
+
+        // TODO allow for no year or date in line. Currently defaults year to like 0000 and date to 1st of Jan if they aren't present.
+
         const date = new Date(dateText);
         
         if(date < new Date())
@@ -19,8 +22,9 @@ export const setReminder = async (client, dateText, reminder, author) => {
             return 'Error setting event. Something went wrong with saving the ID. Please contact my creators.';
 
         const job = schedule.scheduleJob(reminderId, date, () => {
-            sendReminder(client, author.username, author.displayAvatarURL(), reminder.name, reminder.message, reminder.date);
+            sendReminder(client, author.username, author.displayAvatarURL(), reminderId, reminder.message, date);
         });
+
         const reminderSaved = await saveReminder(author, job, reminder, date);
 
         if(!reminderSaved) {
@@ -35,33 +39,84 @@ export const setReminder = async (client, dateText, reminder, author) => {
     }
 };
 
+// Cancels reminder from scheduledJobs.
 export const cancelReminder = async (id) => {
     try {
         const job = schedule.scheduledJobs[id];
         
         if(!job)
             return 'Invalid ID, try again. ```~reminder-cancel ID```';
-        try {
-            const data = await fs.readFileSync('./data/reminders.json');
-            const file = JSON.parse(data);
-    
-            const newFile = file.filter(reminder =>  reminder.name !== id);
-    
-            const json = JSON.stringify(newFile);
-    
-            // Rewrite json with updated reminders.
-            fs.writeFileSync('./data/reminders.json', json);
-        } catch (e) {
-            console.log(e);
-            return 'Unable to rewrite reminders to file. Something went wrong!';
-        }
+
+        let deleted = await deleteReminder(id);
+
+        if(!deleted)
+            return 'Error deleting reminder from storage. Please contact my creators if this persists.';
 
         job.cancel();
 
         return 'Reminder **' + id + '** has been cancelled.';
 
     } catch (error) {
-        return 'Something went wrong cancelling the job, please contact the creators of this bot with a bug report.';
+        return 'Something went wrong cancelling the reminder,  please contact my creators if this persists.';
+    }
+};
+
+
+// Deletes Reminder from stored Data File.
+export const deleteReminder = async (id) => {
+    try {
+        const data = fs.readFileSync('./data/reminders.json');
+        const file = JSON.parse(data);
+
+        const newFile = file.filter(reminder =>  reminder.name !== id);
+
+        const json = JSON.stringify(newFile);
+
+        // Rewrite json with updated reminders.
+        fs.writeFileSync('./data/reminders.json', json);
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+};
+
+export const rescheduleReminder = async (dateText, id, author) => {
+    try {
+        const data = await fs.readFileSync('./data/reminders.json');
+        const file = JSON.parse(data);
+        const storedReminder = file.filter(reminder => reminder.name === id);
+        if(storedReminder.length <= 0)
+            return `No reminder exists with ID ${id}.`+'``` Check your reminders using: ~reminder-list ```';
+
+        const date = new Date(dateText);
+        
+        if(date < new Date())
+            return 'DateTime must be in the future!';
+
+        if(date.getTime() !== date.getTime()) // NaN is never equal to itself (according to google)
+            return 'Invalid Date. Example:  "June 12, 2020 16:57:00" ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```';
+
+        const job = schedule.rescheduleJob(id, date);
+
+        if(!job)
+            return 'failed to reschedule Reminder. Please check your message format and try again. If this persists please contact one of my creators.';
+
+        // Delete old reminder from database.
+        await deleteReminder(id);
+
+        const reminderSaved = await saveReminder(author, job, storedReminder.message, date);
+
+        if(!reminderSaved) {
+            schedule.cancelJob(id);
+            return 'Reminder failed to save. Removed reminder from the schedule to prevent duplication. If this persists please contact my creators.';
+        }
+
+        return `I have rescheduled reminder **${id}** to **${date.toUTCString()}**. You will need ID ${id} to make further changes.`;
+
+    } catch (error) {
+        return 'Something went wrong, pls contact my master.';
     }
 };
 
