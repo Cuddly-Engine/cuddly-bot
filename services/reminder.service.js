@@ -14,7 +14,10 @@ export const setReminder = async (client, dateText, reminder, author) => {
             return 'Invalid Date. Example:  "June 12, 2020 16:57:00" ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```';
 
         const reminderId = await generateIdReminder();
-        
+
+        if(!reminderId)
+            return 'Error setting event. Something went wrong with saving the ID. Please contact my creators.';
+
         const job = schedule.scheduleJob(reminderId, date, () => {
             sendReminder(client, author.username, author.displayAvatarURL(), reminder.name, reminder.message, reminder.date);
         });
@@ -76,13 +79,20 @@ export const listReminders = async () => {
 
 
 // Generates "ID" for reminder. for indexing reminders.
-export const generateIdReminder = async () => {
+export const generateIdReminder = async (i = 0) => {
     try {
-        const list = schedule.scheduledJobs;
+        // TODO this can all go once a actual database is in place. Generating primary keys for each reminder. RE + number
 
-        return 'RE' + (Object.keys(list).length);
+        const list = schedule.scheduledJobs;
+        const ID = (Object.keys(list).length) + i;
+
+         // Prevent IDs from being the same if an earlier reminder is removed. 
+        if(Object.keys(list).filter(r => r === 'RE' + ID).length > 0)
+            return generateIdReminder(i + 1);
+
+           return 'RE' + (ID);
     } catch (error) {
-        return 'Unable to retrieve scheduled reminders.';
+        return false;
     }
 };
 
@@ -135,6 +145,8 @@ export const setRemindersOnStart = async (client) => {
          // Rewrite json with updated reminders.
          fs.writeFileSync('./data/reminders.json', json);
 
+
+         // Log in console how many reminders have been removed due to being out of date.
          console.info('\x1b[33m', `warning: removed ${removedDates} reminders due to them being out of date.`);
 
 
