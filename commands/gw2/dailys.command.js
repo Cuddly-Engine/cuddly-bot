@@ -40,48 +40,23 @@ module.exports = class DailysCommand extends Command {
                 getDailyDetails(resp.fractals.map(x => x.id)),
             ]);
 
-            const embedPsna = new MessageEmbed()
-                .setAuthor('PSNA (Pact Supply Network Agents)', 'https://render.guildwars2.com/file/5A4E663071250EC72668C09E3C082E595A380BF7/528724.png')
-                .setColor(0x00f0f0)
-                .setDescription(psna[index]);
-
-            const embedPve = new MessageEmbed()
-                .setAuthor('PVE', 'https://render.guildwars2.com/file/540BA9BB6662A5154BD13306A1AEAD6219F95361/102369.png')
-                .setColor(0xff0000)
-                .setDescription(pve.map(x => x.name.replace('Daily ', '')));
-
-            const embedPvp = new MessageEmbed()
-                .setAuthor('PVP', 'https://render.guildwars2.com/file/FE01AF14D91F52A1EF2B22FE0A552B9EE2E4C3F6/511340.png')
-                .setColor(0x00ff00)
-                .setDescription(pvp.map(x => x.name.replace('Daily PvP', '')));
-
-            const embedWvw = new MessageEmbed()
-                .setAuthor('WVW', 'https://render.guildwars2.com/file/2BBA251A24A2C1A0A305D561580449AF5B55F54F/338457.png')
-                .setColor(0x0000ff)
-                .setDescription(wvw.map(x => x.name.replace('Daily WvW', '')));
-
-            const embedFractal = new MessageEmbed()
-                .setAuthor('Fractal', 'https://render.guildwars2.com/file/620E0D3D2DD860700632BA7B3AC10C44CE55FD6C/1424206.png')
-                .setColor(0xf0f000)
-                .setDescription(fractal.filter(f => f.name.includes('Daily Tier 4') || f.name.includes('Daily Recommended')).map(f => f.name.replace('Daily Tier 4 ', '')));
-
-            const messageList = [embedPsna, embedPve, embedPvp, embedWvw, embedFractal];
+            let special;
 
             if (resp.special.length > 0) {
-                const special = await getDailyDetails(resp.special.map(x => x.id));
-                const embedSpecial = new MessageEmbed()
-                    .setAuthor('Specials', 'https://render.guildwars2.com/file/339192F5581BB3F771CF359BAB2C90537BD560CB/1228225.png')
-                    .setColor(0x0f0f00)
-                    .setDescription(special.map(x => x.name.replace('Daily ', '')));
-
-                messageList.push(embedSpecial);
+                special = await getDailyDetails(resp.special.map(x => x.id));
             }
 
-            for (const list of messageList) {
-                message.say(list);
-            }
+            const embedPsna = new MessageEmbed()
+                .setAuthor('GW2 Daily Achievements', 'https://render.guildwars2.com/file/5A4E663071250EC72668C09E3C082E595A380BF7/528724.png')
+                .setColor(0x00f0f0)
+                .addField('PNSA (Pact Supply Network Agent)', psna[index])
+                .addField('PvE', pve.map(x => x.name.replace('Daily ', '')))
+                .addField('PvP', pvp.map(x => x.name.replace('Daily PvP', '')))
+                .addField('WvW', wvw.map(x => x.name.replace('Daily WvW', '')))
+                .addField('Fractals', fractal.filter(f => f.name.includes('Daily Tier 4') || f.name.includes('Daily Recommended')).map(f => f.name.replace('Daily Tier 4 ', '')))
+                .addField('Festivals', resp.special.length > 0 ? special.map(x => x.name.replace('Daily ', '')) : 'No current festivals');
 
-            return;
+            return message.say(embedPsna);
         } catch (err) {
             return message.say('An error has occurred in the GW2 API service');
         }
