@@ -1,5 +1,5 @@
-FROM node:12.18.1-alpine
-
+FROM node:12.18.1-alpine3.11
+RUN apk add --no-cache bash
 RUN apt-get update || : && apt-get install python -y
 
 # Create app directory
