@@ -80,10 +80,10 @@ export const getQuaggan = async (quag) => {
     }
 };
 
-export const getFractals = async (fracIds) => {
+export const getDailyDetails = async (ids) => {
     try {
 
-        const response = await axios.get(`${baseUrl}/v2/achievements?ids=${fracIds}`);
+        const response = await axios.get(`${baseUrl}/v2/achievements?ids=${ids}`);
 
         return response.data;
     } catch (error) {
