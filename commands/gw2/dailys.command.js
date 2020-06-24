@@ -31,8 +31,9 @@ module.exports = class DailysCommand extends Command {
 
         const index = moment().subtract(8, 'h').subtract(30, 'm').day();
 
-        const resp = await getDailys();
         try {
+            const resp = await getDailys();
+
             const [pve, pvp, wvw, fractal] = await Promise.all([
                 getDailyDetails(resp.pve.map(x => x.id)),
                 getDailyDetails(resp.pvp.map(x => x.id)),
