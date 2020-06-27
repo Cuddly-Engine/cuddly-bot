@@ -59,32 +59,34 @@ export const sendList = async (list, client) => {
 };
 
 // ? Reminder is different to sendMessage. It styles it in a specific format to suit reminders. With Discord embed feature.
-export const sendReminder = async (client, authorName, authorAvatar, id, title, date) => {
+export const sendReminder = async (client, authorName, authorAvatar, id, title, date, channel) => {
     try {   
 
         // TODO the way data is passed in here is a bit messy, but can't be changed easily atm.
+        
+        // If channel is not provided. Tries to find channel containing keywords "announcements" or "general"
+        if(!channel)
+            channel = getDefaultChannel(client);
 
-        // Tries to find channel containing keywords "announcements" or "general"
-        let defaultChannel = await getDefaultChannel(client);
 
-       defaultChannel.send({embed: {
-        author: {
+        channel.send({embed: {
+            author: {
 
-            // TODO make the images locally stored.
-            name: 'ID: ' + id,
-            icon_url: 'https://i.imgur.com/uxZLrc7.png',
-            //icon_url: 'https://i.imgur.com/cSL3Ok9.png',
-            // If we add recurring reminders, we could put an icon here using icon_url: URL. To represent a recurring one
-        },
-        title: title,
-        description:  new Date(date).toUTCString(),
-        footer: {
-            icon_url: authorAvatar,
-            text: authorName,
-        },
+                // TODO make the images locally stored.
+                name: 'ID: ' + id,
+                icon_url: 'https://i.imgur.com/uxZLrc7.png',
+                //icon_url: 'https://i.imgur.com/cSL3Ok9.png',
+                // If we add recurring reminders, we could put an icon here using icon_url: URL. To represent a recurring one
+            },
+            title: title,
+            description:  new Date(date).toUTCString(),
+            footer: {
+                icon_url: authorAvatar,
+                text: authorName,
+            },
         }});
 
-        return true;
+            return true;
     } catch (error) {
             console.log(error);
         return false;

@@ -31,8 +31,9 @@ export const setReminder = async (client, dateText, reminder, author) => {
             schedule.cancelJob(reminderId);
             return 'Reminder failed to save. Removed reminder from the schedule to prevent duplication. If this persists please contact my masters.';
         }
-
-        return 'I have set a reminder with id **' + reminderId + '** for ' + date.toUTCString() + '. ``` You will need the id ' + reminderId + ' if you wish to delete or edit the reminder. ```';
+        
+        // If successful, return the reminder object so it can be further used. 
+        return {authorUsername: author.username, authorAvatar: author.displayAvatarURL(), id: reminderId, message: reminder, date: date };
 
     } catch (error) {
         return 'Something went wrong, pls contact my master.';
