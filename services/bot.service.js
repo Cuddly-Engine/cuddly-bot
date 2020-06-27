@@ -91,29 +91,7 @@ export const sendReminder = async (client, authorName, authorAvatar, id, title, 
     }
 };
 
-// TODO actually understand the ramifications of a webhooks. All I know is that webhooks allow for multiple embeded messages in one, which will allow me to have multiple reminders in one message rather than spamming the user. 
-export const sendWebhook = async (client, embed) => {
-    try {   
-        // ! This is not finished, and may never be finished. Was experimenting with webhooks. Remove at your own discretion
-        // Tries to find channel containing keywords "announcements" or "general"
-       let defaultChannel = await getDefaultChannel();
-       const webhooks = await defaultChannel.fetchWebhooks();
-       const webhook = webhooks.first();
-
-       await webhook.send('Webhook test', {
-            username: 'some-username',
-            avatarURL: 'https://i.imgur.com/wSTFkRM.png',
-            embeds: [embed],
-        });
-
-        return true;
-    } catch (error) {
-            console.log(error);
-        return false;
-    }
-};
-
-// Gets the general or announcements channel. if they do not exist, gets the first channel in list.
+// ? Gets the general or announcements channel. if they do not exist, gets the first channel in list.
 export const getDefaultChannel = async (client) => {
     try {
         // TODO or cache this so we don't have to keep finding a channel...
@@ -139,7 +117,7 @@ export const getDefaultChannel = async (client) => {
     }
 };
 
- // Gets the channel the user sent command to. Doesn't really need a function but iv came this far i might as well just do it like this.
+ // ? Gets the channel the user sent command to. Doesn't really need a function but iv came this far i might as well just do it like this.
 export const getMessagedChannel = async (client) => {
     try {
         if(client.channels) {
@@ -154,4 +132,39 @@ export const getMessagedChannel = async (client) => {
     
 };
 
+// ? Gets custom emoji from Bot Playground server.
+export const getEmoji = async (client, emojiName) => {
+    try {
+        if(typeof emojiName !== 'string') {
+            console.log('EMOJINAME is not of type STRING. Give getEmoji(Client, STRING)');
+            return false;
+        }
 
+        return client.guilds.cache.get('612751453840474128').emojis.cache.filter(emoji => emoji.name === emojiName).first();
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+
+// TODO actually understand the ramifications of a webhooks. All I know is that webhooks allow for multiple embeded messages in one, which will allow me to have multiple reminders in one message rather than spamming the user. 
+export const sendWebhook = async (client, embed) => {
+    try {   
+        // ! This is not finished, and may never be finished. Was experimenting with webhooks. Remove at your own discretion
+        // Tries to find channel containing keywords "announcements" or "general"
+       let defaultChannel = await getDefaultChannel();
+       const webhooks = await defaultChannel.fetchWebhooks();
+       const webhook = webhooks.first();
+
+       await webhook.send('Webhook test', {
+            username: 'some-username',
+            avatarURL: 'https://i.imgur.com/wSTFkRM.png',
+            embeds: [embed],
+        });
+
+        return true;
+    } catch (error) {
+            console.log(error);
+        return false;
+    }
+};

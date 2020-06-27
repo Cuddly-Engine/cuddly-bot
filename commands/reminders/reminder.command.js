@@ -1,5 +1,6 @@
 import { Command } from 'discord.js-commando';    
 import { setReminder } from '../../services/reminder.service';
+import { getEmoji } from '../../services/bot.service';
 
 module.exports = class ReminderCommand extends Command {
 	constructor(client) {
@@ -24,6 +25,8 @@ module.exports = class ReminderCommand extends Command {
 		if(args.length < 2)
 			return message.say('Failed to split the date and message. use the **|** symbol. ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```');		
 
-		return message.say( await setReminder(this.client /* The discord client */, args[0].trim() /* Date */, args[1].trim() /* Reminder Message */, message.author));
+		const m = await message.say( await setReminder(this.client /* The discord client */, args[0].trim() /* Date */, args[1].trim() /* Reminder Message */, message.author));
+
+		m.react(await getEmoji(this.client, 'recurring'));
 	}
 };
