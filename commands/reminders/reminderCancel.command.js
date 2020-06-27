@@ -7,7 +7,7 @@ module.exports = class ReminderCancelCommand extends Command {
 			aliases: ['reminder-cancel', 'reminder-delete', 'remindercancel', 'reminderdelete', 'cancel-reminder', 'cancelreminder', 'deletereminder','delete-reminder', 'dr', 'cr', 'rc','rd'],
 			group: 'base',
 			memberName: 'reminder-cancel',
-			description: 'Sets reminder which will then appear in Discord at specified time.',
+			description: 'Cancels / deletes a reminder.',
 			throttling: {
 				usages: 2,
 				duration: 10,

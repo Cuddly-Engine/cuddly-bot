@@ -33,7 +33,7 @@ client.on('ready', async () => {
 
   if(!setReminders) 
     console.error('Failed to set reminders on launch. Suggest Restart');
-  client.user.setActivity('with a DOOB | ~help');
+  client.user.setActivity('Skyrim | ~help');
 });
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
