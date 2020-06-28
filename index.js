@@ -25,6 +25,9 @@ client.registry
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.on('ready', async () => {
+
+  // TODO load custom emojis on launch of bot, this way they're readily avaliable instead of having to get them each time.
+  // TODO ^^^ See reminder.command.js for what I mean in multiple emojis being got. 
   console.log(`${client.user.username} is online!`);
 
   client.user.setActivity('celebrating pet fish birthday');
