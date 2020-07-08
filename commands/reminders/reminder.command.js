@@ -1,12 +1,11 @@
 import { Command } from 'discord.js-commando';    
 import { setReminder, cancelReminder } from '../../services/reminder.service';
-import { getEmoji } from '../../services/bot.service';
 
 module.exports = class ReminderCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'reminder',
-			aliases: ['reminder', 'r', 'reminder-set', 'set-reminder', 'setreminder', 'ar', 'sr', 'test'],
+			aliases: ['reminder', 'r', 'reminder-set', 'set-reminder', 'setreminder', 'ar', 'sr'],
 			group: 'base',
 			memberName: 'reminder',
 			description: 'Sets reminder which will then appear in Discord at specified time.',
@@ -28,10 +27,11 @@ module.exports = class ReminderCommand extends Command {
 
 		const returnedReminder = await setReminder(this.client /* The discord client */, args[0].trim() /* Date */, args[1].trim() /* Reminder Message */, message.author);
 
+		console.log(returnedReminder);
+
 		// If error message.
 		if(typeof returnedReminder === 'string') {
-			await message.say(reminder);
-			return false;
+			return message.say(returnedReminder);
 		}
 
 		const m = await message.say('I have set a reminder with id **' + returnedReminder.id + '** for ' + returnedReminder.date.toUTCString() + '. ``` You will need the id ' + returnedReminder.id + ' if you wish to delete or edit the reminder. ```');

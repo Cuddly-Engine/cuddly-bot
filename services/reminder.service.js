@@ -11,7 +11,7 @@ export const setReminder = async (client, dateText, reminder, author) => {
         const date = new Date(dateText);
         
         if(date < new Date())
-            return 'DateTime must be in the future!';
+            return 'The Date you have given me is in the past. It must be in the future!';
 
         if(date.getTime() !== date.getTime()) // NaN is never equal to itself (according to google)
             return 'Invalid Date. Example:  "June 12, 2020 16:57:00" ```~reminder MONTH DAY, YEAR TIME | MESSAGE ```';
