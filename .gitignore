@@ -1,5 +1,5 @@
 # Added by Tom. Data files stored by bot.
-data/
+data/*
 
 # Logs
 logs
