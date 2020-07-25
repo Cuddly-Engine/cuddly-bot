@@ -11,8 +11,8 @@ module.exports = class PlayCommand extends Command {
             memberName: 'play',
             description: 'Plays a song from Youtube.',
             throttling: {
-                usages: 1,
-                duration: 100,
+                usages: 10,
+                duration: 20,
             },
             guildOnly: true,
         });

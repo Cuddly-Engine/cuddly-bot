@@ -29,5 +29,6 @@ module.exports = class SkipCommand extends Command {
         }
 
         serverQueue.connection.dispatcher.end();
+        return message.channel.send('Skipping song...');
     }
 };
